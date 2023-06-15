@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+extern char *json_unesc(char *str);
 extern char *json_esc(char *str);
 extern char *json_kv(char *k, char *v, bool quote_v);
 extern char *json_kvi(char *k, long long v);

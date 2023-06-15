@@ -1,5 +1,65 @@
 #include "jsonbuilder.h"
 
+#include <stdint.h>
+#include <stdlib.h>
+
+char *json_unesc(char *str) {
+  if (!str) return NULL;
+  char *r = malloc(strlen(str) + 1);
+  if (!r) return NULL;
+  char *ptr_r = r;
+  for (char *i = str; i < str + strlen(str); i++) {
+    if (*i != '\\' || i == str + strlen(str) - 1) {
+      *ptr_r++ = *i;
+      continue;
+    }
+    switch (*++i) {
+      case '"':
+      case '\\':
+      case '/':
+        *ptr_r++ = *i;
+        break;
+      case 'b':
+        *ptr_r++ = '\b';
+        break;
+      case 'f':
+        *ptr_r++ = '\f';
+        break;
+      case 'n':
+        *ptr_r++ = '\n';
+        break;
+      case 'r':
+        *ptr_r++ = '\r';
+        break;
+      case 't':
+        *ptr_r++ = '\t';
+        break;
+      case 'u': {
+        if (i + 4 < str + strlen(str)) {
+          char hex[5];
+          strncpy(hex, i + 1, 4);
+          hex[4] = '\0';
+          long utf_long = strtol(hex, NULL, 16);
+          if (utf_long >= 0 && utf_long <= 0xffff) {
+            uint16_t utf_2b = (uint16_t)(utf_long);
+            memcpy(ptr_r, &utf_2b, 2);
+            ptr_r += 2;
+          } else {
+            // wrong JSON str, do nothing
+            *ptr_r++ = '\\';
+            *ptr_r++ = *i;
+          }
+        } else {
+          // wrong JSON str, do nothing
+          *ptr_r++ = '\\';
+          *ptr_r++ = *i;
+        }
+      } break;
+    }
+  }
+  return r;
+}
+
 char *json_esc(char *str) {
   if (!str) return NULL;
   char *r = malloc(strlen(str) * 2 + 1);
@@ -7,7 +67,7 @@ char *json_esc(char *str) {
   char *ptr_r = r;
   for (char *i = str; i < str + strlen(str); i++) {
     if (!i) break;
-    char i_cpy = 0;
+    char i_cpy = '\0';
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
     switch (*i) {
       case '\b':
@@ -27,6 +87,7 @@ char *json_esc(char *str) {
         goto quo;
       quo:
       case '"':
+      case '/':
       case '\\':
         *ptr_r++ = '\\';
       default:
