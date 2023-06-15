@@ -10,6 +10,8 @@ arch=('x86_64')
 source=('jsonbuilder.c' 'jsonbuilder.h' 'Makefile')
 license=('GPL3')
 sha1sums=('SKIP' 'SKIP' 'SKIP')
+depends=('glibc')
+
 pkgver() {
   git log -1 --format="%cd" --date=short | sed 's|-||g'
 }

@@ -10,6 +10,10 @@ arch=('x86_64')
 source=('libjsonbuilder::git+https://github.com/nicholascw/libjsonbuilder#branch=master')
 license=('GPL3')
 sha1sums=('SKIP')
+makedepends=('git')
+depends=('glibc')
+url='https://github.com/nicholascw/libjsonbuilder'
+
 pkgver() {
   cd ${srcdir}/libjsonbuilder
   git log -1 --format="%cd" --date=short | sed 's|-||g'
