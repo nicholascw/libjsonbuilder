@@ -65,6 +65,7 @@ char *json_unesc(char *str) {
       } break;
     }
   }
+  *ptr_r='\0';
   return r;
 }
 
