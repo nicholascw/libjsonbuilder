@@ -39,11 +39,19 @@ char *json_unesc(char *str) {
           char hex[5];
           strncpy(hex, i + 1, 4);
           hex[4] = '\0';
-          long utf_long = strtol(hex, NULL, 16);
-          if (utf_long >= 0 && utf_long <= 0xffff) {
-            uint16_t utf_2b = (uint16_t)(utf_long);
-            memcpy(ptr_r, &utf_2b, 2);
-            ptr_r += 2;
+          long utf8_long = strtol(hex, NULL, 16);
+          if (utf8_long >= 0 && utf8_long <= 0xffff) {
+            if (utf8_long < 0x0080) {
+              *ptr_r++ = ((char)utf8_long) & 0b01111111;
+            } else if (utf8_long < 0x0800) {
+              *ptr_r++ = 0b11000000 | ((char)((utf8_long >> 6) & 0b00011111));
+              *ptr_r++ = 0b10000000 | ((char)(utf8_long & 0b00111111));
+            } else {
+              *ptr_r++ = 0b11100000 | ((char)((utf8_long >> 12) & 0b00001111));
+              *ptr_r++ = 0b10000000 | ((char)((utf8_long >> 6) & 0b00111111));
+              *ptr_r++ = 0b10000000 | ((char)(utf8_long & 0b00111111));
+            }
+            i += 4;
           } else {
             // wrong JSON str, do nothing
             *ptr_r++ = '\\';
