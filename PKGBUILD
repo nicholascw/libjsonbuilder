@@ -19,6 +19,6 @@ build() {
 }
 
 package() {
-  install -Dm755 ${srcdir}/libjsonbuilder.so "${pkgdir}"/usr/lib/libjsonbuilder.so
-  install -Dm644 ${srcdir}/jsonbuilder.h "${pkgdir}"/usr/include/jsonbuilder.h
+  install -Dm755 ${srcdir}/libjsonbuilder/libjsonbuilder.so "${pkgdir}"/usr/lib/libjsonbuilder.so
+  install -Dm644 ${srcdir}/libjsonbuilder/jsonbuilder.h "${pkgdir}"/usr/include/jsonbuilder.h
 }

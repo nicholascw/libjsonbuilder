@@ -8,7 +8,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "json_builder.h"
 
 extern char *json_esc(char *str);
 extern char *json_kv(char *k, char *v, bool quote_v);

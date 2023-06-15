@@ -7,13 +7,13 @@ endif
 
 .PHONY: all clean
 
-all : libjsonbuilder
+all : libjsonbuilder.so
 
 libjsonbuilder.so: obj/jsonbuilder.o
 	$(CC) $(CFLAGS) -shared obj/jsonbuilder.o -o $@
 
 clean:
-	$(RM) vgcore.* obj/*.o libjsonbuilder.so
+	$(RM) -r vgcore.* libjsonbuilder.so libjsonbuilder src/ pkg/ obj/ libjsonbuilder*.tar*
 
 obj/%.o: %.c
 	mkdir -p $(@D)

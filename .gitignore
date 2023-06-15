@@ -1,3 +1,9 @@
+libjsonbuilder/*
+obj/*
+src/*
+pkg/*
+
+
 # Prerequisites
 *.d
 
